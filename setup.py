@@ -16,6 +16,7 @@
 # Foundation, Inc., 51 Franklin Street, Fifth Floor, Boston, MA  02110-1301, USA.
 
 from distutils.core import setup
+import sys
 
 version = '0.1'
 name = 'git2changelog'
@@ -35,8 +36,8 @@ setup(
     py_modules=['git2changelog'],
     scripts = ['scripts/git2changelog'],
     data_files=[
-            ('/usr/share/doc/%s-%s' % (name,version), ['doc/LICENSE']),
-            ('/usr/share/man/man8', ['doc/git2changelog.8.gz']),
+            ('%s/usr/share/doc/%s-%s' % (sys.prefix,name,version), ['doc/LICENSE']),
+            ('%s/usr/share/man/man8' % (sys.prefix), ['doc/git2changelog.8.gz']),
         ],
     )
 
