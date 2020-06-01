@@ -70,7 +70,8 @@ class CLData:
         #the logic here: if you don't have any tagged releases you should not be creating a spec file.
 
         git_command = 'git tag'
-        cl_raw = subprocess.Popen(git_command,shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=self.repo)
+        cl_raw = subprocess.Popen(git_command,shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                  universal_newlines=True, cwd=self.repo)
 
         tags = cl_raw.stdout.readlines()
         if len(tags) == 0:
@@ -88,7 +89,7 @@ class CLData:
         new_release = False
         if 'HEAD' in tag:
             if 'tag' in tag:
-                tag = "- %s" % tag.split(':')[1].strip(' ()').split(',')[0] 
+                tag = "- %s" % tag.split(':')[1].strip(' ()').split(',')[0]
             else:
                 if self.tag_name:
                     tag = "- %s" % self.tag_name
@@ -105,7 +106,8 @@ class CLData:
         #grabs the raw git log data from the given repo
 
         git_command = 'git --no-pager log %s..%s --pretty --format=\'%%cD,%%cn,%%ce,%%h,"%%s","%%d"\'' % (self.t_start, self.t_end)
-        cl_raw = subprocess.Popen(git_command,shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT, cwd=self.repo)
+        cl_raw = subprocess.Popen(git_command,shell=True, stdout=subprocess.PIPE, stderr=subprocess.STDOUT,
+                                  universal_newlines=True, cwd=self.repo)
 
         return cl_raw.stdout.readlines()
 
@@ -116,21 +118,21 @@ class CLData:
         for row in data:
             r_check,release = self._formatRelease(row[6])
             if r_check:
-                print "\n* %s %s <%s> %s" % (self._formatDate(row[1]),row[2],row[3],release)
+                print ("\n* %s %s <%s> %s" % (self._formatDate(row[1]),row[2],row[3],release))
                 if self.search_terms:
                     for item in self.search_terms:
                         if item in row[5]:
-                            print "- %s : Commit %s" % (row[5],row[4])
+                            print ("- %s : Commit %s" % (row[5],row[4]))
                             break
                 else:
-                    print "- %s : Commit %s" % (row[5],row[4])
+                    print ("- %s : Commit %s" % (row[5],row[4]))
             else:
                 if self.search_terms:    #if we want to limit the output to lines with certain strings in the comment
                     for item in self.search_terms:
                         if item in row[5]:
-                            print "- %s : Commit %s" % (row[5],row[4])
+                            print ("- %s : Commit %s" % (row[5],row[4]))
                 else:   #if we want all of the commits - no search term given
-                    print "- %s : Commit %s" % (row[5],row[4])
+                    print ("- %s : Commit %s" % (row[5],row[4]))
 
     def formatChangeLog(self):
 
